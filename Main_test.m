@@ -4,7 +4,7 @@ clear all; close all;
 % d dimension, delta coefficients for Gibbs measure
 % example index, see choose_example, contians various benchamark functions 
 rng(10); %random number generator
-addpath(genpath('TT_toolbox'), genpath('Optimization_Algorithms'), 'Aux_functions');
+addpath(genpath('Optimization_Algorithms'), genpath('Aux_functions'));
 term_tol = 1e-2;   examples = [1]; nexamples = 1;  
 d =4; Max_eval = 1e6; Maxit = floor(Max_eval/(40*d));  
 delta = 0.1; epsf = 1e-1; % initial delta should not be too small which may cause high computational cost in the beginning
@@ -32,14 +32,14 @@ MCIPP_Params.warmstart = 1;
 
 for jexample = 1:nexamples  
     example_idx = examples(jexample); [fval,~,xex] = choose_example(1,delta,d,example_idx);
-    % [xk1,xk1_hist,errxk1,nsamples1,k1] = TT_IPP_optimization(example_idx,xinit,TTIPP_Params);
-    % [xk2,xk2_hist,errxk2,nsamples2,k2] = MC_HJ_prox_optimization(example_idx,delta,d,floor(Max_eval/NMC_int),NMC_int,term_tol,xinit);
-    % [xk3,xk3_hist,errxk3,nsamples3,k3] = my_CBO_optimization(example_idx,d, Maxit,term_tol,xinit);
+    [xk1,xk1_hist,errxk1,nsamples1,k1] = TT_IPP_optimization(example_idx,xinit,TTIPP_Params);
+    [xk2,xk2_hist,errxk2,nsamples2,k2] = MC_HJ_prox_optimization(example_idx,delta,d,floor(Max_eval/NMC_int),NMC_int,term_tol,xinit);
+    [xk3,xk3_hist,errxk3,nsamples3,k3] = my_CBO_optimization(example_idx,d, Maxit,term_tol,xinit);
     [xk4,xk4_hist,errxk4,nsamples4,k4] = my_DE_optimization(example_idx,d, Maxit,term_tol,xinit);
-    % [xk5,xk5_hist,errxk5,nsamples5,k5] = my_PSO_optimization(example_idx,d, Maxit,term_tol,xinit);
-    % [xk7,xk7_hist,errxk7,nsamples7,k7] = MC_IPP_prox(example_idx,xinit,MCIPP_Params);
-    % [xk6,xk6_hist,errxk6,nsamples6,k6] = my_simulanneal(example_idx,d,Maxit*(20*d),term_tol,xinit);
-    % [xk8,xk8_hist,errxk8,nsamples8,k8] = my_random_search(example_idx,d,Maxit,term_tol,xinit);
+    [xk5,xk5_hist,errxk5,nsamples5,k5] = my_PSO_optimization(example_idx,d, Maxit,term_tol,xinit);
+    [xk7,xk7_hist,errxk7,nsamples7,k7] = MC_IPP_prox(example_idx,xinit,MCIPP_Params);
+    [xk6,xk6_hist,errxk6,nsamples6,k6] = my_simulanneal(example_idx,d,Maxit*(20*d),term_tol,xinit);
+    [xk8,xk8_hist,errxk8,nsamples8,k8] = my_random_search(example_idx,d,Maxit,term_tol,xinit);
 end
  
 fprintf(['TT-IPP: ', num2str(errxk1(k1)), '; Function evalutaions: ', num2str(nsamples1), '\n']);
